@@ -1,0 +1,39 @@
+
+      html,
+      body {
+        width: 100vw;
+        height: 190vw;
+        margin: 0;
+        padding: 0;
+        background-image: url(img/bg.jpg);
+        background-size: cover;
+      }
+      main {
+        /* height: 190vw; */
+      }
+      img {
+        display: block;
+      }
+      .nav {
+        margin-top: 6.5vw;
+        /* background-color: pink; */
+      }
+      .title {
+        width: 45.95vw;
+      }
+      .logo {
+        width: 60vw;
+      }
+      .nav img:nth-child(1) {
+        float: left;
+      }
+      .nav img:nth-child(2) {
+        float: right;
+        margin-right: 6.4vw;
+        margin-left: 1.7vw;
+        width: 6.5vw;
+      }
+      .nav img:nth-child(3) {
+        float: right;
+        width: 6.5vw;
+      }

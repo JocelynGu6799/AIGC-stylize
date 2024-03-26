@@ -1,0 +1,126 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh; 
+    overflow: hidden; /* 防止页面滚动 */
+}
+@font-face {
+    font-family: CustomFont; 
+    src: url('../font/ZaoZiGongFangZhangTieTi-2.ttf') ;        
+}
+@font-face {
+    font-family: ContentFont; 
+    src: url('../font/judou-sans-common-hans-regular.ttf') ;        
+}
+/* ——————————————————背景图片部分———————————————— */
+.background-container {
+    position: absolute;
+    width: 100%; 
+    height: 100%; 
+}
+.background-image {
+    width: 1080px;
+    height: 1920px;
+}
+/* ——————————————————跳转菜单—————————————— */
+.menu-container{
+    position: absolute;
+    padding-top: 8%;
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.menu-container .logo{
+    margin-left: 5%;
+    margin-right: 20%;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.menu-container .box{
+    padding-right: 5%;
+    position: relative;
+    width: 30%;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-container .box img{
+    width: 100%;
+    height: 100%;
+}
+/* ————————————————主要选择部分———————————————————— */
+.inner-container {
+    position: relative;
+    top: 55%;
+    left: -20%;
+    transform: translate(-50%, -50%);
+    width: 2000px;
+    height: 2000px;
+    border-radius: 50%;
+    transition: transform 1s ease; /* 添加过渡效果 */
+}
+.item {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    display: flex;
+    transform-origin: center center;
+    opacity: 1; /* 初始时设置透明度为0 */
+    transition: opacity 1s ease; /* 添加透明度渐变动画 */
+    transition: transform 1s ease; /* 添加过渡效果 */
+}
+.main-content{
+    height: 500px;
+    /* position: absolute; */
+    width: 500px;
+    display: flex;
+    flex-direction: column; /* 垂直排列容器 */
+}
+.target-select{
+    width: 500px;
+    height: auto;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #f4d386;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.target-select button {
+    border: none; 
+    outline: none;
+    background-color: transparent; 
+    cursor: pointer; 
+}
+
+.target-select .content-tiltle{
+    margin: 5% 0 1% 0;
+    font-family: 'CustomFont';
+    font-size: 60px;
+    color: #f4d386;
+}
+
+.main-content .content-body{
+    margin: 0 2% 4% 6%;
+    font-family: 'ContentFont';
+    font-size: 54px;
+    color: #ffffff;
+    display: none;
+}
+
+.main-content .in-link{
+    width: 28vw;
+
+    align-self: flex-end;
+    margin: 30px 5px 0 0;
+    display: none;
+}
