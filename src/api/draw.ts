@@ -21,7 +21,7 @@ interface IViewApi{
     prompt_id:string;
     client:string;
 }
-export const getViewApi=(queryParams:any)=>{
+export const getViewApi=(queryParams:IViewApi)=>{
     return req.get<any,any>(base.view,{params:queryParams})
 
 }
@@ -29,7 +29,7 @@ interface IOssApi{
     prompt_id?:string;
     client_id:string;
 }
-export const getOssApi=(queryParams:any)=>{
+export const getOssApi=(queryParams:IOssApi)=>{
     // console.log(params);
     
     return req.get<any,any>(base.getoss,{params:queryParams})
