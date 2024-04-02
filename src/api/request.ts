@@ -62,7 +62,9 @@ req.interceptors.response.use(
   (err) => {
     // showNotify({ type: 'danger', message: '网络错误 即将跳转到主页面' })
     ElMessage.error('网络错误 即将跳转到主页面')
-    router.push("/")
+    setTimeout(()=>{
+      router.push("/")
+  },1000)
 
     return Promise.reject(err)
   }

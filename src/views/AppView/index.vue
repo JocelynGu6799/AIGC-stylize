@@ -15,13 +15,13 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-    <div>
-        <MyHeader :ifbtn="true"></MyHeader>
-        <main></main>
-    
+  <div>
+    <MyHeader :ifbtn="true"></MyHeader>
+    <main></main>
+
     <div class="photo" ref="photo">
       <!-- <img src="img/生成照片区.png" width="900vw" /> -->
-      <img :src="imgurl" width="100%" />
+      <img :src="newString" width="100%" />
     </div>
     <div class="chongpai" @click="retake">
       <img src="@/assets/images/retakebtn.png" width="300vw" />
@@ -31,17 +31,11 @@
     </div>
 
     <div id="qrcode-container">
-      <vue-qr
-    :size="190"
-    :margin="0"
-    :auto-color="true"
-    :dot-scale="1"
-    :text="codedata"
-/>
+      <vue-qr :size="190" :margin="0" :auto-color="true" :dot-scale="1" :text="newString" />
 
     </div>
     <img src="@/assets/images/save.png" alt="" class="save">
-    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -55,25 +49,35 @@ import { onMounted, ref } from 'vue'
 import { getQueuesApi, postUploadApi, getViewApi } from '@/api/draw'
 import { ElLoading } from 'element-plus';
 
-const drawStore=useDrawStore()
-const imgurl=drawStore.imgurl
-const router=useRouter()
+const drawStore = useDrawStore()
+// const imgurl = drawStore.imgurl
+const router = useRouter()
 // let qrcode=ref<any>(null)
-const retake=()=>{
+const retake = () => {
   router.push("/upload")
 }
 // 获取要生成二维码的数据
 // var codedata = drawStore.imgurl;
-var codedata =drawStore.imgurl;
+var originalString = drawStore.imgurl;
+var newString = ''
 
- // 通过QR Code Generator库生成二维码
+var lastSmallIndex = originalString.lastIndexOf("small");
+if (lastSmallIndex !== -1) {
+  // 将最后一个 "small" 之后的子字符串替换为 "imerc"
+  newString = originalString.substring(0, lastSmallIndex) + "imerc";
+  console.log("newString,", newString);
+} else {
+  console.log("未找到要替换的字符串");
+}
+
+// 通过QR Code Generator库生成二维码
 // qrcode = new QRCode(qrcode.value, {
 //         text: data,
 //         width: 300,
 //         height: 300,
 //       });
 let uploadImg = () => {
-    const svg = `
+  const svg = `
         <path class="path" d="
           M 30 15
           L 28 17
@@ -84,136 +88,139 @@ let uploadImg = () => {
         " style="stroke-width: 0.4vw; fill: rgba(255, 255, 0)"/>
       `
 
-    var fd = new FormData();
-    var base64String = drawStore.dataUrl;
-    var bytes = window.atob(base64String.split(",")[1]);
-    var array = [];
-    for (var i = 0; i < bytes.length; i++) {
-        array.push(bytes.charCodeAt(i));
-    }
-    var blob = new Blob([new Uint8Array(array)], { type: "image/jpeg" });
-    console.log("blob", blob);
-    fd.append("image", blob, Date.now() + ".jpg");
-    fd.append("prompt", drawStore.contentId);
-    console.log("contentid", drawStore.contentId);
-    fd.append("client", "cuz");
-    console.log("formdata", fd);
-    postUploadApi(fd).then((res) => {
-     
-        console.log("upload res", res);
-        drawStore.prompt_id = res.prompt_id
-        const intervalId = setInterval(() => {
-            const loadingInstance = ElLoading.service({ fullscreen: true, text: "正在努力绘画中..." })
+  var fd = new FormData();
+  var base64String = drawStore.dataUrl;
+  var bytes = window.atob(base64String.split(",")[1]);
+  var array = [];
+  for (var i = 0; i < bytes.length; i++) {
+    array.push(bytes.charCodeAt(i));
+  }
+  var blob = new Blob([new Uint8Array(array)], { type: "image/jpeg" });
+  console.log("blob", blob);
+  fd.append("image", blob, Date.now() + ".jpg");
+  fd.append("prompt", drawStore.contentId);
+  console.log("contentid", drawStore.contentId);
+  fd.append("client", "cuz");
+  console.log("formdata", fd);
+  postUploadApi(fd).then((res) => {
 
-            getViewApi({ prompt_id: drawStore.prompt_id, client_id: "cuz" })
-                .then((response) => {
-                    console.log("view res", response);
-                    if (response.statusCode === 200) {
-                     
-                        console.log("绘图成功", response);
+    console.log("upload res", res);
+    drawStore.prompt_id = res.prompt_id
+    const intervalId = setInterval(() => {
+      const loadingInstance = ElLoading.service({ fullscreen: true, text: "正在努力绘画中..." })
 
+      getViewApi({ prompt_id: drawStore.prompt_id, client_id: "cuz" })
+        .then((response) => {
+          console.log("view res", response);
+          if (response.statusCode === 200) {
 
-                        const keys = Object.keys(response.data); // 获取对象的所有键
-                        const firstKey = keys[0]; // 获取数组中的第一个键
-                        const imgurl = response.data[firstKey]; // 获取第一个键对应的值
-                        console.log("imgurl,", imgurl);
-                        drawStore.imgurl=imgurl
-
-                        loadingInstance.close()
-                        
-                        clearInterval(intervalId);
-                        router.push("/view")
+            console.log("绘图成功", response);
 
 
-                    }
-                    else if (response.statusCode === 400) {
-                        console.log("等待绘图中...");
-                    } else {
-                        console.log("绘图失败");
-                    }
+            const keys = Object.keys(response.data); // 获取对象的所有键
+            const firstKey = keys[0]; // 获取数组中的第一个键
+            const imgurl = response.data[firstKey]; // 获取第一个键对应的值
+            console.log("imgurl,", imgurl);
+            drawStore.imgurl = imgurl
 
-                }).catch((error) => {
-                    console.error("获取绘图数据失败:", error);
-                });
-        }, 2000)
+            loadingInstance.close()
+
+            clearInterval(intervalId);
+            router.push("/view")
 
 
-    }).catch((error) => {
-        console.error("获取上传数据失败:", error);
-    });
+          }
+          else if (response.statusCode === 400) {
+            console.log("等待绘图中...");
+          } else {
+            console.log("绘图失败");
+          }
+
+        }).catch((error) => {
+          console.error("获取绘图数据失败:", error);
+        });
+    }, 2000)
+
+
+  }).catch((error) => {
+    console.error("获取上传数据失败:", error);
+  });
 
 }
 </script>
 
 <style scoped>
 main {
-        height: 178.8vw;
-      }
+  height: 178.8vw;
+}
 
 
-      img {
-        display: block;
-        width: 100%;
-        height: 100%;
-      }
+img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 
-      .zhuye {
-        float: right;
-        margin-top: -174vw;
-        margin-right: 15vw;
-        width: 9.26vw;
-		height: 9.26vw;
-      }
+.zhuye {
+  float: right;
+  margin-top: -174vw;
+  margin-right: 15vw;
+  width: 9.26vw;
+  height: 9.26vw;
+}
 
-      .lishi {
-        float: right;
-        margin-top: -174vw;
-        margin-right: 5vw;
-        width: 9.26vw;
-		height: 9.26vw;
-      }
+.lishi {
+  float: right;
+  margin-top: -174vw;
+  margin-right: 5vw;
+  width: 9.26vw;
+  height: 9.26vw;
+}
 
-      .photo {
-        float: right;
-        margin-top: -150vw;
-        margin-right: 8vw;
-        overflow: hidden;
-        width: 85vw;
-        height: 102vw;
-      }
+.photo {
+  float: right;
+  margin-top: -150vw;
+  margin-right: 8vw;
+  overflow: hidden;
+  width: 85vw;
+  height: 102vw;
+}
 
-      .chongpai {
-        float: right;
-        margin-top: -40vw;
-        margin-right: 55vw;
-        width: 28vw;
-		height: 9vw;
-      }
+.chongpai {
+  float: right;
+  margin-top: -40vw;
+  margin-right: 55vw;
+  width: 28vw;
+  height: 9vw;
+}
 
-      .chongsheng {
-        float: right;
-        margin-top: -25vw;
-        margin-right: 55vw;
-        width: 28vw;
-		height: 9vw;
-      }
+.chongsheng {
+  float: right;
+  margin-top: -25vw;
+  margin-right: 55vw;
+  width: 28vw;
+  height: 9vw;
+}
 
-      #qrcode-container {
-        position: relative;
-        overflow: hidden;
-        float: right;
-        margin-right: 20vw;
-        margin-top: -42vw;
-      }
-#qrcode-container,#qrcode{
-        width: 27.8vw;
-        height: 27.8vw;
-      }
-      .save{
-        width: 35vw;
-        position:relative;
-        left: 48vw;
-        bottom: 10vw;
-     
-      }
+#qrcode-container {
+  position: relative;
+  overflow: hidden;
+  float: right;
+  margin-right: 20vw;
+  margin-top: -42vw;
+}
+
+#qrcode-container,
+#qrcode {
+  width: 27.8vw;
+  height: 27.8vw;
+}
+
+.save {
+  width: 35vw;
+  position: relative;
+  left: 48vw;
+  bottom: 10vw;
+
+}
 </style>

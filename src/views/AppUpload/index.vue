@@ -172,10 +172,18 @@ let uploadImg = () => {
                         console.log("等待绘图中...");
                     } else {
                         console.log("绘图失败");
+                        loadingInstance.close()
+                    clearInterval(intervalId);
                     }
 
                 }).catch((error) => {
                     console.error("获取绘图数据失败:", error);
+                    loadingInstance.close()
+                    clearInterval(intervalId);
+                    setTimeout(()=>{
+                        router.push("/")
+                    },1000)
+                   
                 });
         }, 2000)
 

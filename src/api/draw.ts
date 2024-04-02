@@ -19,7 +19,7 @@ export const postUploadApi=(fd:any)=>{
 }
 interface IViewApi{
     prompt_id:string;
-    client:string;
+    client_id:string;
 }
 export const getViewApi=(queryParams:IViewApi)=>{
     return req.get<any,any>(base.view,{params:queryParams})
