@@ -140,6 +140,7 @@ let uploadImg = () => {
     console.log("contentid", drawStore.contentId);
     fd.append("client", "cuz");
     console.log("formdata", fd);
+    
     postUploadApi(fd).then((res) => {
         getGreen();
         console.log("upload res", res);

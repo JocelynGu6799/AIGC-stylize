@@ -47,12 +47,12 @@
                     <div class="grid-item">
                           <div class="sub-item">
                             <a href="" class="myLink" id="myLink5">
-                                <div class="content-tiltle" id="I2IGhostXLAnimeCycleScifi">轻赛博科幻主题</div>
+                                <div class="content-tiltle" id="I2IGhostXLAnimeCycleScifi">轻赛博科幻</div>
                             </a>
                           </div>
                           <div class="sub-item">
                             <a href="" class="myLink" id="myLink6">
-                                <div class="content-tiltle" id="I2IGhostXLAnimeChinese">中国龙主题国风</div>
+                                <div class="content-tiltle" id="I2IGhostXLAnimeChinese">中国龙国风</div>
                             </a>
                           </div>
                           <div class="sub-item">

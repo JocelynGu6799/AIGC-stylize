@@ -16,7 +16,7 @@ const router=useRouter()
 
 const req = axios.create({
   baseURL: base.host,
-  timeout: 5000
+  timeout: 30000
 })
 
 // 请求拦截
